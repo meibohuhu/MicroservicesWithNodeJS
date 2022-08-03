@@ -26,6 +26,16 @@ const userSchema = new mongoose.Schema({       // specific to mongoose, not for 
     type: String,
     required: true
   }
+},
+{
+  toJSON: {
+    transform(doc, ret) {
+      ret.id = ret._id;          // rename _id to id
+      delete ret._id;
+      delete ret.password;
+      delete ret.__v;
+    }
+  }
 });
 
 userSchema.pre('save', async function(done) {   // mongoose doesn't support async way, only support old way call back function, so we get this done argument and call done() at end.
