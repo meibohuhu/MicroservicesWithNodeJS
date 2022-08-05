@@ -8,7 +8,7 @@ const router = express.Router();
 
 // currentUser middleware: assign req.currentUser JWT payload
 // requireAuth: reject request without JWT token
-router.get('/api/users/currentuser', currentUser, requireAuth, (req, res) => {
+router.get('/api/users/currentuser', currentUser, (req, res) => {
   // if (!req.session?.jwt) {
   //   return res.send({ currentUser: null });
   // }

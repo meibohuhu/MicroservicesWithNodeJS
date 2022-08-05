@@ -11,26 +11,28 @@ import { signupRouter } from "./routes/signup";
 import { errorHandler } from "./middlewares/error-handler";
 import { NotFoundError } from "./errors/not-found-error";
 
-const app = express();
-app.set("trust proxy", true);    // use nginx
-app.use(json());
-app.use(
-  cookieSession({
-    signed: false,
-    secure: true,
-  })
-);
+// const app = express();
+// app.set("trust proxy", true);    // use nginx
+// app.use(json());
+// app.use(
+//   cookieSession({
+//     signed: false,
+//     secure: true,
+//   })
+// );
 
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
+// app.use(currentUserRouter);
+// app.use(signinRouter);
+// app.use(signoutRouter);
+// app.use(signupRouter);
 
-app.all("*", async (req, res) => {
-  throw new NotFoundError();
-});
+// app.all("*", async (req, res) => {
+//   throw new NotFoundError();
+// });
 
-app.use(errorHandler);
+// app.use(errorHandler);
+
+import { app } from './app';
 
 const start = async () => {
   if (!process.env.JWT_KEY) throw new Error("JWT_KEY must be defined");
