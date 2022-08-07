@@ -23,7 +23,7 @@ export const errorHandler = (
   // }
 
   if (err instanceof CustomError) {
-    console.log("Handling this error now ");
+    // console.log("Handling this error now ");
     return res.status(err.statusCode).send({ errors: err.serializeErrors() });        // statusCode and serializeErrors() are all abstract
   }
 
