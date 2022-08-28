@@ -16,6 +16,7 @@ stan.on('connect', () => {
     console.log('NATS connection closed!');
     process.exit();
   });
+  new TicketCreatedListener(stan).listen();       // 代替下面所有
 
   // const options = stan
   //   .subscriptionOptions()
@@ -38,7 +39,6 @@ stan.on('connect', () => {
 
   //   msg.ack();
   // });
-  new TicketCreatedListener(stan).listen();
 });
 
 process.on('SIGINT', () => stan.close());
