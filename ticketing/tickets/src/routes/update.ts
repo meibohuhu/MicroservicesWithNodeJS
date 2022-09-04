@@ -5,6 +5,7 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
+  BadRequestError,
 } from "@wendy96tickets/common";
 import { Ticket } from "../models/ticket";
 import { TicketUpdatedPublisher } from "../events/publishers/ticket-updated-publisher";
@@ -32,6 +33,9 @@ router.put(
       throw new NotAuthorizedError();
     }
 
+    // we need to decide whether or not we should allow the ticket to be edited in case it's actually reserved.
+    if (ticket.orderId) throw new BadRequestError('Cannot edit a reserved ticket');   
+
     ticket.set({
       title: req.body.title,
       price: req.body.price,
@@ -43,6 +47,7 @@ router.put(
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version
     })
 
     res.send(ticket);
