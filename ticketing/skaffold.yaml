@@ -7,19 +7,16 @@ deploy:
 build:
   # local:
   #   push: false
-  googleCloudBuild:
-    projectId: ticketing-dev-357706
   artifacts:
-    # - image: meibohu/auth
     - image: us.gcr.io/ticketing-dev-357706/auth
       context: auth
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
-          - src: "src/**/*.ts"
+          - src: 'src/**/*.ts'
             dest: .
-    - image: us.gcr.io/ticketing-dev-357706/client
+    - image: us.gcr.io/ticketing-dev-357706/ticketing-client
       context: client
       docker:
         dockerfile: Dockerfile
@@ -33,7 +30,7 @@ build:
         dockerfile: Dockerfile
       sync:
         manual:
-          - src: '**/*.js'
+          - src: 'src/**/*.ts'
             dest: .
     - image: us.gcr.io/ticketing-dev-357706/orders
       context: orders
@@ -41,5 +38,13 @@ build:
         dockerfile: Dockerfile
       sync:
         manual:
-          - src: '**/*.js'
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: us.gcr.io/ticketing-dev-357706/expiration
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
             dest: .
