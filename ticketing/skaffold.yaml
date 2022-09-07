@@ -5,10 +5,10 @@ deploy:
     manifests:
       - ./infra/k8s/*
 build:
-  # local:
-  #   push: false
+  local:
+    push: false
   artifacts:
-    - image: us.gcr.io/ticketing-dev-357706/auth
+    - image: meibohu/auth
       context: auth
       docker:
         dockerfile: Dockerfile
@@ -16,7 +16,7 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: us.gcr.io/ticketing-dev-357706/ticketing-client
+    - image: meibohu/ticketing-client
       context: client
       docker:
         dockerfile: Dockerfile
@@ -24,7 +24,7 @@ build:
         manual:
           - src: '**/*.js'
             dest: .
-    - image: us.gcr.io/ticketing-dev-357706/tickets
+    - image: meibohu/tickets
       context: tickets
       docker:
         dockerfile: Dockerfile
@@ -32,7 +32,7 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: us.gcr.io/ticketing-dev-357706/orders
+    - image: meibohu/orders
       context: orders
       docker:
         dockerfile: Dockerfile
@@ -40,8 +40,16 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: us.gcr.io/ticketing-dev-357706/expiration
+    - image: meibohu/expiration
       context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: meibohu/payments
+      context: payments
       docker:
         dockerfile: Dockerfile
       sync:

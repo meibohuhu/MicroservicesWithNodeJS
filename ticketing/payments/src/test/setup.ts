@@ -1,14 +1,20 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import jwt from 'jsonwebtoken';
-import request from "supertest";
-import { app } from "../app";
+import jwt from "jsonwebtoken";
+
+declare global {
+  var signin: (id?: string) => string[];
+}
 
 jest.mock("../nats-wrapper");
 
-let mongo: any;    // declare this variable ahead of time
+process.env.STRIPE_KEY = "sk_test_51GrT8tIdb6NjppDMnny1gIeU4yRwRFrRXK0uwfegu5AT3uq84Es9dDjMhW7hNsFTQOpQGZlXZwIp1iW6bRtUvilx00aqqN2jja";
+
+let mongo: any;
 beforeAll(async () => {
-  process.env.JWT_KEY = 'jwei';
+  process.env.JWT_KEY = "asdfasdf";
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
   const mongo = await MongoMemoryServer.create();
   const mongoUri = mongo.getUri();
 
@@ -31,22 +37,11 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-// create function/property for global variable
-declare global {
-  var signin: () => string[];
-}
-
-// create function/property for global variable, return cookie
-/*
-  const email = "t@t.com";
-  const password = "123456";
-*/
-global.signin = () => {
+global.signin = (id?: string) => {
   // Build a JWT payload.  { id, email }
   const payload = {
-    // id: '12skjdhfkj23',
-    id: new mongoose.Types.ObjectId().toHexString(),     // each time using random id
-    email: 'meibohu@usc.com',
+    id: id || new mongoose.Types.ObjectId().toHexString(),
+    email: "test@test.com",
   };
 
   // Create the JWT!
@@ -59,20 +54,8 @@ global.signin = () => {
   const sessionJSON = JSON.stringify(session);
 
   // Take JSON and encode it as base64
-  const base64 = Buffer.from(sessionJSON).toString('base64');
+  const base64 = Buffer.from(sessionJSON).toString("base64");
 
   // return a string thats the cookie with the encoded data
-  // cookie: session=eyJqd3QiOiJleUpoYkdjaU9pSklVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKcFpDSTZJall5WldabFkyVXdOekF4WlRSallXTXhZemczWkRnMk9DSXNJbVZ0WVdsc0lqb2lkRUIwTG1OdmJTSXNJbWxoZENJNk1UWTFPVGc1TURreE1uMC5pWWd5YU1fSHd3WGNxVk5uUjAycUxqSnU5UjktdVBVTXlEVk9qYU9RWjA0In0=
   return [`session=${base64}`];
-
-  // const response = await request(app)
-  //   .post("/api/users/signup")
-  //   .send({
-  //     email,
-  //     password,
-  //   })
-  //   .expect(201);
-  
-  // const cookie = response.get("Set-Cookie");
-  // return cookie;
-}
+};
